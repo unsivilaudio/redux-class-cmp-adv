@@ -1,21 +1,22 @@
-import { createStore } from 'redux';
+import { legacy_createStore as createStore, combineReducers, compose } from 'redux';
+import counter from './counter';
+import auth from './auth';
 
-const counterReducer = (state = { counter: 0 }, action) => {
-  if (action.type === 'increment') {
-    return {
-      counter: state.counter + 1,
-    };
-  }
+/**
+ *  Helper function provided by Redux to handle combining
+ *  multiple pieces of state in our store
+ */
+const reducers = combineReducers({
+    auth,
+    counter,
+});
 
-  if (action.type === 'decrement') {
-    return {
-      counter: state.counter - 1,
-    };
-  }
+/**
+ *  Adding Redux Devtools Extension support,
+ *  {@link https://github.com/zalmoxisus/redux-devtools-extension Redux Devtools Extension}
+ */
+const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION__ || compose;
 
-  return state;
-};
-
-const store = createStore(counterReducer);
+const store = createStore(reducers, composeEnhancer());
 
 export default store;
